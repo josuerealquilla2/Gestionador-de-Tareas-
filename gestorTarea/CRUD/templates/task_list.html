@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<h1>holaaaaa</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">guardar tarea</button>
+</form>
+<h2>tareas</h2>
+    {% for task in tasks%}
+    <li>
+        <strong>{{ task.titulo }}</strong>{{ task.descripcion }}
+    </li>
+{% empty %}
+<li> no hay tareas guardadas</li>
+{% endfor %}
+
+<h2>tareas completas</h2>
+    {% for task in completed_task%}
+    <li>
+        <strong>{{ task.titulo }}</strong>{{ task.descripcion }}
+        <form action="{%url 'crud:update_task' task.id%}" method="post">
+    {% csrf_token %}
+    <input type="checkbox" name="completed" onchange="this.form.submit()"{% if task.is_completed %} checked {% endif %} >
+</form>
+    </li>
+{% empty %}
+<li> no hay tareas guardadas</li>
+{% endfor %}
+
+<h2>tareas incompletas</h2>
+    {% for task in incomplete_task%}
+    <li>
+        <strong>{{ task.titulo }}</strong>{{ task.descripcion }}
+        <form action="{%url 'crud:update_task' task.id%}" method="post">
+    {% csrf_token %}
+    <input type="checkbox" name="completed" onchange="this.form.submit()" {% if task.is_completed %} checked {% endif %} >
+</form>
+    </li>
+{% empty %}
+<li> no hay tareas guardadas</li>
+{% endfor %}
+</body>
+</html>
