@@ -1,4 +1,4 @@
-const BASE = `${import.meta.env.VITE_API_URL ?? 'http://localhost:8000'}/api/tasks`;
+const BASE = `${import.meta.env.VITE_API_URL ?? 'https://gestionador-de-tareas-q2pd.vercel.app'}/api/tasks`;
 
 export async function getTasks() {
   const r = await fetch(`${BASE}/`);
