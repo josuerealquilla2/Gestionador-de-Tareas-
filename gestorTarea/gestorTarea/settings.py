@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:5173'
+    'http://localhost:5173,https://gestionador-de-tareas-r2kk.vercel.app,https://gestionador-de-tareas-q2pd.vercel.app'
 ).split(',')
 
 MIDDLEWARE = [
