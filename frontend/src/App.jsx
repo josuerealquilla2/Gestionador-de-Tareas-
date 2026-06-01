@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { getTasks, createTask, updateTask, toggleTask, deleteTask } from './api';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import './index.css';
 
-export default function App() {
+function TasksApp() {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const username = localStorage.getItem('username') || 'Usuario';
 
   async function load() {
     try {
@@ -15,13 +20,19 @@ export default function App() {
       setTasks(data);
       setError(null);
     } catch {
-      setError('No se pudo conectar con el servidor. Asegurate de que Django este corriendo en :8000');
+      setError('No se pudo conectar con el servidor.');
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => { load(); }, []);
+
+  function handleLogout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    navigate('/login');
+  }
 
   async function handleCreate(data) {
     const t = await createTask(data);
@@ -48,16 +59,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-900">
-      {/* Header */}
       <header className="bg-slate-800 border-b border-slate-700 shadow-lg">
-        <div className="max-w-3xl mx-auto px-4 py-8 text-center">
-          <h1 className="text-4xl font-bold text-white mb-1 tracking-tight">
-            Gestionador de Tareas
-          </h1>
+        <div className="max-w-3xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-between mb-1">
+            <h1 className="text-3xl font-bold text-white tracking-tight">Gestionador de Tareas</h1>
+            <div className="flex items-center gap-3">
+              <span className="text-slate-400 text-sm hidden sm:block">Hola, <span className="text-white font-medium">{username}</span></span>
+              <button
+                onClick={handleLogout}
+                className="text-slate-400 hover:text-red-400 text-sm px-3 py-1.5 rounded-lg hover:bg-slate-700 transition-colors border border-slate-600"
+              >
+                Salir
+              </button>
+            </div>
+          </div>
           <p className="text-slate-400 text-sm">Organiza tu dia de forma simple</p>
 
           {tasks.length > 0 && (
-            <div className="flex justify-center gap-6 mt-5">
+            <div className="flex gap-4 mt-5">
               <div className="bg-slate-700 rounded-xl px-5 py-2.5 text-center">
                 <p className="text-2xl font-bold text-blue-300">{pending}</p>
                 <p className="text-slate-400 text-xs uppercase tracking-wide">Pendientes</p>
@@ -75,7 +94,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main */}
       <main className="max-w-3xl mx-auto px-4 py-8">
         <TaskForm onCreate={handleCreate} />
 
@@ -93,14 +111,26 @@ export default function App() {
         )}
 
         {!loading && !error && (
-          <TaskList
-            tasks={tasks}
-            onToggle={handleToggle}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <TaskList tasks={tasks} onToggle={handleToggle} onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </main>
     </div>
+  );
+}
+
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/login" replace />;
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<PrivateRoute><TasksApp /></PrivateRoute>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
