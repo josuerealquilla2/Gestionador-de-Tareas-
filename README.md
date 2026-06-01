@@ -9,16 +9,16 @@ Aplicación web full-stack para la gestión de tareas personales con autenticaci
 ## Capturas de pantalla
 
 ### Inicio de sesión
-![Login](https://raw.githubusercontent.com/josuerealquilla2/Gestionador-de-Tareas-/backend-GestorTareas/frontend/public/login.png)
+![Login](frontend/public/login.png)
 
 ### Pantalla principal
-![Inicio](https://raw.githubusercontent.com/josuerealquilla2/Gestionador-de-Tareas-/backend-GestorTareas/frontend/public/inicio.png)
+![Inicio](frontend/public/inicio.png)
 
 ### Crear tarea
-![Crear tarea](https://raw.githubusercontent.com/josuerealquilla2/Gestionador-de-Tareas-/backend-GestorTareas/frontend/public/crear-tarea.png)
+![Crear tarea](frontend/public/crear-tarea.png)
 
 ### Listado de tareas
-![Listar tareas](https://raw.githubusercontent.com/josuerealquilla2/Gestionador-de-Tareas-/backend-GestorTareas/frontend/public/lsitar-tareas.png)
+![Listar tareas](frontend/public/lsitar-tareas.png)
 
 ---
 
