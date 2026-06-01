@@ -14,38 +14,53 @@
     <button type="submit">guardar tarea</button>
 </form>
 <h2>tareas</h2>
-    {% for task in tasks%}
+{% for task in tasks %}
     <li>
-        <strong>{{ task.titulo }}</strong>{{ task.descripcion }}
+        <strong>{{ task.titulo }}</strong> {{ task.descripcion }}
+        <a href="{% url 'crud:edit_task' task.id %}">Editar</a>
+        <form action="{% url 'crud:delete_task' task.id %}" method="post" style="display:inline">
+            {% csrf_token %}
+            <button type="submit">Eliminar</button>
+        </form>
     </li>
 {% empty %}
-<li> no hay tareas guardadas</li>
+    <li>no hay tareas guardadas</li>
 {% endfor %}
 
 <h2>tareas completas</h2>
-    {% for task in completed_task%}
+{% for task in completed_task %}
     <li>
-        <strong>{{ task.titulo }}</strong>{{ task.descripcion }}
-        <form action="{%url 'crud:update_task' task.id%}" method="post">
-    {% csrf_token %}
-    <input type="checkbox" name="completed" onchange="this.form.submit()"{% if task.is_completed %} checked {% endif %} >
-</form>
+        <strong>{{ task.titulo }}</strong> {{ task.descripcion }}
+        <form action="{% url 'crud:update_task' task.id %}" method="post" style="display:inline">
+            {% csrf_token %}
+            <input type="checkbox" name="completed" onchange="this.form.submit()" {% if task.is_completed %} checked {% endif %}>
+        </form>
+        <a href="{% url 'crud:edit_task' task.id %}">Editar</a>
+        <form action="{% url 'crud:delete_task' task.id %}" method="post" style="display:inline">
+            {% csrf_token %}
+            <button type="submit">Eliminar</button>
+        </form>
     </li>
 {% empty %}
-<li> no hay tareas guardadas</li>
+    <li>no hay tareas guardadas</li>
 {% endfor %}
 
 <h2>tareas incompletas</h2>
-    {% for task in incomplete_task%}
+{% for task in incomplete_task %}
     <li>
-        <strong>{{ task.titulo }}</strong>{{ task.descripcion }}
-        <form action="{%url 'crud:update_task' task.id%}" method="post">
-    {% csrf_token %}
-    <input type="checkbox" name="completed" onchange="this.form.submit()" {% if task.is_completed %} checked {% endif %} >
-</form>
+        <strong>{{ task.titulo }}</strong> {{ task.descripcion }}
+        <form action="{% url 'crud:update_task' task.id %}" method="post" style="display:inline">
+            {% csrf_token %}
+            <input type="checkbox" name="completed" onchange="this.form.submit()" {% if task.is_completed %} checked {% endif %}>
+        </form>
+        <a href="{% url 'crud:edit_task' task.id %}">Editar</a>
+        <form action="{% url 'crud:delete_task' task.id %}" method="post" style="display:inline">
+            {% csrf_token %}
+            <button type="submit">Eliminar</button>
+        </form>
     </li>
 {% empty %}
-<li> no hay tareas guardadas</li>
+    <li>no hay tareas guardadas</li>
 {% endfor %}
 </body>
 </html>
