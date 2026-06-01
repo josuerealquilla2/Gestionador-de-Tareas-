@@ -9,25 +9,39 @@ function headers() {
 }
 
 export async function login(username, password) {
-  const r = await fetch(`${API}/auth/login/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-  });
-  const data = await r.json();
-  if (!r.ok) throw new Error(data.error || 'Error al iniciar sesion');
-  return data;
+  try {
+    const r = await fetch(`${API}/auth/login/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Error al iniciar sesion');
+    return data;
+  } catch (e) {
+    if (e.message.includes('fetch') || e.message.includes('Network')) {
+      throw new Error('No se pudo conectar con el servidor. Verifica tu conexion.');
+    }
+    throw e;
+  }
 }
 
 export async function register(username, email, password) {
-  const r = await fetch(`${API}/auth/register/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, email, password }),
-  });
-  const data = await r.json();
-  if (!r.ok) throw new Error(data.error || 'Error al registrarse');
-  return data;
+  try {
+    const r = await fetch(`${API}/auth/register/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Error al registrarse');
+    return data;
+  } catch (e) {
+    if (e.message.includes('fetch') || e.message.includes('Network')) {
+      throw new Error('No se pudo conectar con el servidor. Verifica tu conexion.');
+    }
+    throw e;
+  }
 }
 
 export async function getTasks() {

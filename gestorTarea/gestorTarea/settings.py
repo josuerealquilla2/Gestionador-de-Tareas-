@@ -39,8 +39,12 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:5173,https://gestionador-de-tareas-r2kk.vercel.app,https://gestionador-de-tareas-q2pd.vercel.app'
+    'http://localhost:5173'
 ).split(',')
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.vercel\.app$',
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
