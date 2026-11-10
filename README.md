@@ -1,184 +1,96 @@
+<div align="center">
+
 # Gestionador de Tareas
 
-Aplicación web full-stack para la gestión de tareas personales con autenticación por usuario. Cada cuenta tiene su propio espacio privado donde puede crear, editar, completar y eliminar tareas.
+### Organiza tus pendientes en un espacio personal, sencillo y seguro
 
-**Demo en vivo:** [gestionador-de-tareas.vercel.app](https://gestionador-de-tareas.vercel.app)
+Aplicación web full-stack para gestionar tareas personales mediante una interfaz moderna y una API REST protegida con JSON Web Tokens.
 
----
+[![Demo](https://img.shields.io/badge/VER_DEMO-1d4ed8?style=for-the-badge&logo=vercel&logoColor=white)](https://gestionador-de-tareas.vercel.app)
+[![React](https://img.shields.io/badge/React_19-20232a?style=for-the-badge&logo=react&logoColor=61dafb)](https://react.dev/)
+[![Django](https://img.shields.io/badge/Django_6-092e20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-0f172a?style=for-the-badge&logo=tailwindcss&logoColor=38bdf8)](https://tailwindcss.com/)
+[![JWT](https://img.shields.io/badge/Auth-JWT-111827?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
 
-## Capturas de pantalla
-
-### Inicio de sesión
-![Login](frontend/public/login.png)
-
-### Pantalla principal
-![Inicio](frontend/public/inicio.png)
-
-### Crear tarea
-![Crear tarea](frontend/public/crear-tarea.png)
-
-### Listado de tareas
-![Listar tareas](frontend/public/lsitar-tareas.png)
+</div>
 
 ---
 
-## Tecnologías
+## Descripción
 
-### Backend
-| Tecnología | Uso |
-|---|---|
-| Django 6.0 | Framework principal |
-| Django REST Framework | API REST |
-| Simple JWT | Autenticación con tokens |
-| django-cors-headers | Control de CORS |
-| PostgreSQL (Neon) | Base de datos en producción |
-| Whitenoise | Archivos estáticos |
-| Vercel | Hosting serverless |
+**Gestionador de Tareas** es una aplicación web full-stack diseñada para centralizar la organización diaria de cada usuario en un espacio privado. Permite crear una cuenta, iniciar sesión y administrar tareas mediante un ciclo CRUD completo: crear, consultar, editar, marcar como completadas o pendientes y eliminar. La interfaz separa visualmente ambos estados y actualiza los contadores de pendientes, completadas y total después de cada acción.
 
-### Frontend
-| Tecnología | Uso |
-|---|---|
-| React 19 | Interfaz de usuario |
-| Vite | Bundler y servidor de desarrollo |
-| React Router v7 | Navegación entre páginas |
-| Tailwind CSS v4 | Estilos utilitarios |
-| Vercel | Hosting y CDN |
+Más allá de la funcionalidad visible, el proyecto demuestra la integración de una **Single Page Application construida con React** y una **API REST desarrollada con Django REST Framework**. El frontend consume la API con `fetch`, protege la navegación según el estado de la sesión y envía un token JWT en las operaciones privadas. En el servidor, cada consulta se filtra por el usuario autenticado; por tanto, una cuenta no puede consultar ni modificar las tareas de otra.
 
----
+La solución utiliza SQLite durante el desarrollo y puede cambiar a PostgreSQL mediante una variable de entorno, sin alterar el código de negocio. El frontend y el backend también están preparados para desplegarse como proyectos independientes en Vercel. Esta separación mantiene claras las responsabilidades de presentación, comunicación HTTP, autenticación y persistencia, y convierte el repositorio en una muestra compacta de desarrollo web de extremo a extremo.
 
-## Arquitectura
+> **Demo:** [gestionador-de-tareas.vercel.app](https://gestionador-de-tareas.vercel.app)
 
-```
-Gestionador-de-Tareas/
-├── gestorTarea/               # Backend Django
-│   ├── CRUD/
-│   │   ├── models.py          # Modelo Task con FK a User
-│   │   ├── api_views.py       # Vistas REST (CRUD de tareas)
-│   │   ├── auth_views.py      # Vistas de registro e inicio de sesión
-│   │   ├── serializers.py     # Serialización de datos
-│   │   └── api_urls.py        # Rutas de la API
-│   ├── gestorTarea/
-│   │   ├── settings.py        # Configuración del proyecto
-│   │   ├── urls.py            # URLs principales
-│   │   └── wsgi.py            # Punto de entrada WSGI
-│   ├── requirements.txt
-│   └── vercel.json
-│
-└── frontend/                  # Frontend React
-    ├── src/
-    │   ├── pages/
-    │   │   ├── Login.jsx      # Página de inicio de sesión
-    │   │   └── Register.jsx   # Página de registro
-    │   ├── components/
-    │   │   ├── TaskCard.jsx   # Tarjeta individual de tarea
-    │   │   ├── TaskForm.jsx   # Formulario de nueva tarea
-    │   │   └── TaskList.jsx   # Listado de tareas
-    │   ├── App.jsx            # Enrutador principal y vista de tareas
-    │   └── api.js             # Cliente HTTP con autenticación JWT
-    └── vite.config.js
-```
+## Contenido
 
----
+- [Capturas de la aplicación](#capturas-de-la-aplicación)
+- [Funcionalidades](#funcionalidades)
+- [Arquitectura](#arquitectura)
+- [Flujo de autenticación](#flujo-de-autenticación)
+- [Tecnologías](#tecnologías)
+- [Modelo de datos](#modelo-de-datos)
+- [API REST](#api-rest)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Instalación local](#instalación-local)
+- [Variables de entorno](#variables-de-entorno)
+- [Scripts disponibles](#scripts-disponibles)
+- [Despliegue](#despliegue)
+- [Decisiones técnicas](#decisiones-técnicas)
+- [Mejoras futuras](#mejoras-futuras)
+- [Autor](#autor)
 
-## API Endpoints
+## Capturas de la aplicación
 
 ### Autenticación
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `POST` | `/api/auth/register/` | Crear nueva cuenta |
-| `POST` | `/api/auth/login/` | Iniciar sesión y obtener token |
 
-### Tareas (requieren token JWT)
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/api/tasks/` | Listar todas las tareas del usuario |
-| `POST` | `/api/tasks/` | Crear nueva tarea |
-| `PUT` | `/api/tasks/{id}/` | Editar tarea |
-| `DELETE` | `/api/tasks/{id}/` | Eliminar tarea |
-| `PATCH` | `/api/tasks/{id}/toggle/` | Marcar como completada/pendiente |
+<table>
+  <tr>
+    <td align="center"><strong>Inicio de sesión</strong></td>
+    <td align="center"><strong>Creación de una cuenta</strong></td>
+  </tr>
+  <tr>
+    <td><img src="frontend/public/login.png" alt="Formulario de inicio de sesión" width="100%"></td>
+    <td><img src="frontend/public/registro.png" alt="Formulario de registro" width="100%"></td>
+  </tr>
+</table>
 
-Todas las peticiones autenticadas deben incluir el header:
-```
-Authorization: Bearer <access_token>
-```
+### Flujo principal
 
----
+<table>
+  <tr>
+    <td align="center"><strong>Estado inicial</strong></td>
+    <td align="center"><strong>Creación de una tarea</strong></td>
+  </tr>
+  <tr>
+    <td><img src="frontend/public/menu_inicio.png" alt="Panel sin tareas" width="100%"></td>
+    <td><img src="frontend/public/crear_tarea.png" alt="Formulario para crear una tarea" width="100%"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Tarea pendiente</strong></td>
+    <td align="center"><strong>Tarea completada</strong></td>
+  </tr>
+  <tr>
+    <td><img src="frontend/public/tarea_pendiente.png" alt="Panel con una tarea pendiente" width="100%"></td>
+    <td><img src="frontend/public/tarea_completada.png" alt="Panel con una tarea completada" width="100%"></td>
+  </tr>
+</table>
 
 ## Funcionalidades
 
-- **Registro e inicio de sesión** con validaciones en frontend y backend
-- **Visualización de contraseña** con ícono de ojo en los formularios
-- **Tareas privadas por usuario** — cada cuenta solo ve sus propias tareas
-- **CRUD completo** — crear, editar, completar y eliminar tareas
-- **Separación por estado** — sección de pendientes y completadas
-- **Estadísticas en tiempo real** — contador de pendientes, completadas y total
-- **Cierre de sesión** con limpieza del token
-- **Rutas protegidas** — redirige al login si no hay sesión activa
+### Cuenta y sesión
 
----
+- Registro con nombre de usuario, correo opcional y contraseña.
+- Validación de campos en el cliente y en el servidor.
+- Inicio de sesión mediante credenciales y emisión de tokens JWT.
+- Opción para mostrar u ocultar la contraseña.
+- Ruta principal protegida: un visitante sin token es redirigido al inicio de sesión.
+- Cierre de sesión mediante la eliminación de los datos locales de autenticación.
 
-## Instalación local
+### Gestión de tareas
 
-### Requisitos previos
-- Python 3.12+
-- Node.js 18+
-- pip
-
-### Backend
-
-```bash
-cd gestorTarea
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
-
-El servidor quedará disponible en `http://localhost:8000`.
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-La app quedará disponible en `http://localhost:5173`.
-
-> Para desarrollo local, crea el archivo `frontend/.env` con:
-> ```
-> VITE_API_URL=http://localhost:8000
-> ```
-
----
-
-## Variables de entorno
-
-### Backend (Vercel)
-| Variable | Descripción |
-|---|---|
-| `DATABASE_URL` | URL de conexión a PostgreSQL (Neon) |
-| `SECRET_KEY` | Clave secreta de Django |
-| `DEBUG` | `False` en producción |
-
-### Frontend (Vercel)
-| Variable | Descripción |
-|---|---|
-| `VITE_API_URL` | URL base del backend desplegado |
-
----
-
-## Despliegue
-
-El proyecto está desplegado en dos proyectos separados en Vercel:
-
-- **Backend:** apunta a la carpeta `gestorTarea/` con Python serverless
-- **Frontend:** apunta a la carpeta `frontend/` con Vite como framework
-
-La base de datos en producción es **PostgreSQL** alojada en [Neon](https://neon.tech), con conexión segura via SSL.
-
----
-
-## Autor
-
-**Josue David Real Quilla**
+- Creación de tareas con título obligatorio y descripción opcional.
